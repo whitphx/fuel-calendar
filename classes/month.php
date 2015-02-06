@@ -55,7 +55,7 @@ class Month {
 			$day->sub(new \DateInterval('P'.(-$offset).'D'));
 		}
 		
-		return \Day::forge($day->format('Y'), $day->format('n'), $day->format('j'));
+		return \Day::forge($day);
 	}
 	
 	public function days() {

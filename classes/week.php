@@ -126,7 +126,7 @@ class Week {
 			$day->sub(new \DateInterval('P'.(-$offset).'D'));
 		}
 		
-		return $day;
+		return \Day::forge($day);
 	}
 	
 	public function iso_year() {

@@ -10,17 +10,31 @@ class Day {
 	const DAY    = 86400;
 	
 	public function __construct($year, $month, $day) {
-		$this->_datetime = new \DateTime();
-		$this->_datetime->setDate($year, $month, $day);
-		$this->_datetime->setTime(0, 0, 0);
+		if ($year instanceof \DateTime)
+		{
+			$this->_datetime = $year;
+		}
+		else
+		{
+			$this->_datetime = new \DateTime();
+			$this->_datetime->setDate($year, $month, $day);
+			$this->_datetime->setTime(0, 0, 0);
+		}
 	}
 	
 	public static function forge($year = null, $month = null, $day = null) {
-		is_null($year) and $year = (int) date('Y');
-		is_null($month) and $month = (int) date('n');
-		is_null($day) and $day = (int) date('j');
-		
-		return new static($year, $month, $day);
+		if ($year instanceof \DateTime)
+		{
+			return new static($year, null, null);
+		}
+		else
+		{
+			is_null($year) and $year = (int) date('Y');
+			is_null($month) and $month = (int) date('n');
+			is_null($day) and $day = (int) date('j');
+
+			return new static($year, $month, $day);
+		}
 	}
 	
 	public function format($format) {
