@@ -148,4 +148,12 @@ class Week {
 		}
 		return $res;
 	}
+	
+	public function begin() {
+		return $this->day(1);
+	}
+	
+	public function end() {
+		return $this->day(6);
+	}
 }
