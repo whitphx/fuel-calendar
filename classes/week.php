@@ -138,7 +138,7 @@ class Week {
 	}
 	
 	public static function max_week($year) {
-		return date('W', mktime(0, 0, 0, 12, 31, $year)) == 53 ? 53 : 52;
+		return \Calendar\Year::forge($year)->max_week();
 	}
 	
 	public function days() {
