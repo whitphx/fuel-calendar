@@ -150,7 +150,7 @@ class Week {
 	}
 	
 	public function begin() {
-		return $this->day(1);
+		return $this->day(0);
 	}
 	
 	public function end() {
