@@ -74,7 +74,7 @@ class Week {
 		} else if ($addition < 0) {
 			$added_date->sub(new \DateInterval('P'.(-$addition).'W'));
 		} else {
-			return $added_date;
+			return static::forge($this->iso_year(), $this->iso_week(), $this->_firstday);
 		}
 		
 		$added_iso_year = (int) $added_date->format('o');
