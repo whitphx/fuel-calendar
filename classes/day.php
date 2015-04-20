@@ -74,6 +74,16 @@ class Day {
 		return static::forge($year, $month, $day);
 	}
 	
+	public function next()
+	{
+		return $this->add(1);
+	}
+	
+	public function prev()
+	{
+		return $this->prev();
+	}
+	
 	public function getTimestamp() {
 		return $this->_datetime->getTimestamp();
 	}
