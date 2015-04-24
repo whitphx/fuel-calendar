@@ -3,11 +3,36 @@
 namespace Calendar;
 
 class Week {
-	protected $_iso_year;           // _canonical_datetimeが表現するDateのISO週番号に則った年
-	protected $_iso_week;           // _canonical_datetimeが表現するDateのISO週番号
-	private $_datetime;             // _canonical_datetimeと_firstdayの組み合わせによって決まる，実際にインスタンスが表現する週の初日のDate
-	private $_canonical_datetime;   // ISO 週番号の定義に則り，月曜日始まりでオフセットを考慮しない場合のDateを表現，
-	private $_firstday;             // インスタンスが表現する週の始まりの曜日．
+	
+	/**
+	 * _canonical_datetimeが表現するDateのISO週番号に則った年
+	 * @var int
+	 */
+	protected $_iso_year;
+	
+	/**
+	 * _canonical_datetimeが表現するDateのISO週番号
+	 * @var int
+	 */
+	protected $_iso_week;
+	
+	/**
+	 * _canonical_datetimeと_firstdayの組み合わせによって決まる，実際にインスタンスが表現する週の初日のDate
+	 * @var \DateTime
+	 */
+	private $_datetime;
+	
+	/**
+	 * ISO 週番号の定義に則り，月曜日始まりでオフセットを考慮しない場合のDateを表現，
+	 * @var \DateTime
+	 */
+	private $_canonical_datetime;
+	
+	/**
+	 * インスタンスが表現する週の始まりの曜日．
+	 * @var int
+	 */
+	private $_firstday;
 
 	const WEEK   = 604800;
 	const DAY    = 86400;
@@ -35,10 +60,25 @@ class Week {
 		$this->_firstday = $day;
 	}
 	
+	/**
+	 * 
+	 * @param type $year
+	 * @param type $week
+	 * @param type $day
+	 * @return static
+	 */
 	public static function forge($year, $week, $day = 1) {
 		return new static($year, $week, $day);
 	}
 	
+	/**
+	 * 
+	 * @param type $year
+	 * @param type $month
+	 * @param type $week
+	 * @param type $day
+	 * @return static
+	 */
 	public static function forge_by_week_of_month($year, $month, $week, $day = 1) {
 		$timestamp_day1 = mktime(0, 0, 0, $month, 1, $year);
 		$iso_year_day1 = date('o', $timestamp_day1);
@@ -54,6 +94,12 @@ class Week {
 		return new static($iso_year, $iso_week, $day);
 	}
 	
+	/**
+	 * 
+	 * @param type $date
+	 * @param type $day
+	 * @return static
+	 */
 	public static function forge_by_date($date = null, $day = 1) {
 		$time = is_null($date) ? time() : strtotime($date);
 		$time -= ($day - 1) * static::DAY;
@@ -63,6 +109,12 @@ class Week {
 		return new static($year, $week, $day);
 	}
 	
+	/**
+	 * 
+	 * @param type $addition
+	 * @return static
+	 * @throws \OutOfBoundsException
+	 */
 	public function add($addition) {
 		if ( !is_int($addition)) {
 			throw new \OutOfBoundsException('the argument must be integer.');
@@ -83,14 +135,27 @@ class Week {
 		return static::forge($added_iso_year, $added_iso_week, $this->_firstday);
 	}
 	
+	/**
+	 * 
+	 * @return static
+	 */
 	public function next() {
 		return $this->add(1);
 	}
 	
+	/**
+	 * 
+	 * @return static
+	 */
 	public function prev() {
 		return $this->add(-1);
 	}
 	
+	/**
+	 * 
+	 * @param type $duplicate
+	 * @return Array
+	 */
 	public function of_month($duplicate = true) {
 		if ($duplicate) {
 			$lastday = clone $this->_datetime;
@@ -114,6 +179,12 @@ class Week {
 		return array($y, $m, $w);
 	}
 	
+	/**
+	 * 
+	 * @param type $offset
+	 * @return Day
+	 * @throws \OutOfBoundsException
+	 */
 	public function day($offset) {
 		if ( ! is_int($offset)) {
 			throw new \OutOfBoundsException('Offset must be integer.');
@@ -129,18 +200,35 @@ class Week {
 		return \Day::forge($day);
 	}
 	
+	/**
+	 * 
+	 * @return int
+	 */
 	public function iso_year() {
 		return $this->_iso_year;
 	}
 	
+	/**
+	 * 
+	 * @return int
+	 */
 	public function iso_week() {
 		return $this->_iso_week;
 	}
 	
+	/**
+	 * 
+	 * @param type $year
+	 * @return int
+	 */
 	public static function max_week($year) {
 		return \Calendar\Year::forge($year)->max_week();
 	}
 	
+	/**
+	 * 
+	 * @return Array
+	 */
 	public function days() {
 		$res = array();
 		foreach (range(0, 6) as $offset) {
@@ -149,11 +237,27 @@ class Week {
 		return $res;
 	}
 	
+	/**
+	 * 
+	 * @return Day
+	 */
 	public function begin() {
 		return $this->day(0);
 	}
 	
+	/**
+	 * 
+	 * @return Day
+	 */
 	public function end() {
 		return $this->day(6);
+	}
+	
+	/**
+	 * 
+	 * @return int
+	 */
+	public function getTimestamp() {
+		return $this->_datetime->getTimestamp();
 	}
 }
