@@ -109,6 +109,13 @@ class Week {
 		return new static($year, $week, $day);
 	}
 	
+	public static function forge_by_time($time, $day = 1)
+	{
+		$year = (int) date('o', $time);
+		$week = (int) date('W', $time);
+		return new static($year, $week, $day);
+	}
+	
 	/**
 	 * 
 	 * @param type $addition
@@ -259,5 +266,10 @@ class Week {
 	 */
 	public function getTimestamp() {
 		return $this->_datetime->getTimestamp();
+	}
+	
+	public function get_first_day()
+	{
+		return $this->_firstday;
 	}
 }
