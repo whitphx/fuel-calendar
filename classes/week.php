@@ -67,7 +67,10 @@ class Week {
 	 * @param type $day
 	 * @return static
 	 */
-	public static function forge($year, $week, $day = 1) {
+	public static function forge($year = null, $week = null, $day = 1) {
+		is_null($year) and $year = (int) date('o');
+		is_null($week) and $week = (int) date('W');
+		
 		return new static($year, $week, $day);
 	}
 	
