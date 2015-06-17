@@ -62,4 +62,57 @@ class Test_Month extends \TestCase {
 			array(2014, 4, 30),
 		);
 	}
+	
+	/**
+	 * @dataProvider add_provider
+	 */
+	public function test_add($y1, $m1, $y2, $m2, $offset)
+	{
+		$month = \Calendar\Month::forge($y1, $m1);
+		$added_month = $month->add($offset);
+		$this->assertEquals($y2, $added_month->year());
+		$this->assertEquals($m2, $added_month->month());
+		
+		$month2 = \Calendar\Month::forge($y2, $m2);
+		$subbed_month = $month2->add(-$offset);
+		$this->assertEquals($y1, $subbed_month->year());
+		$this->assertEquals($m1, $subbed_month->month());
+	}
+	
+	public function add_provider()
+	{
+		return array(
+			array(2010, 1, 2010, 2, 1),
+			array(2010, 11, 2010, 12, 1),
+			array(2010, 12, 2011, 1, 1),
+			array(2010, 12, 2012, 12, 24),
+			array(2010, 12, 2013, 2, 26),
+		);
+	}
+	
+	public function test_firstday_offset()
+	{
+		$month = \Calendar\Month::forge(2010, 10, 15);
+		$this->assertEquals('2010-10-15', $month->begin()->format('Y-m-d'));
+		$this->assertEquals('2010-11-14', $month->end()->format('Y-m-d'));
+	}
+	
+	public function test_add_with_firstday_offset()
+	{
+		$m_2010_1 = \Calendar\Month::forge(2010, 1, 31);
+		$this->assertEquals('2010-01-31', $m_2010_1->begin()->format('Y-m-d'));
+		$this->assertEquals('2010-02-27', $m_2010_1->end()->format('Y-m-d'));
+		
+		$m_2010_2 = $m_2010_1->next();
+		$this->assertEquals('2010-02-28', $m_2010_2->begin()->format('Y-m-d'));
+		$this->assertEquals('2010-03-27', $m_2010_2->end()->format('Y-m-d'));
+		
+		$m_2010_3_after_2 = $m_2010_2->next();
+		$this->assertEquals('2010-03-28', $m_2010_3_after_2->begin()->format('Y-m-d'));
+		$this->assertEquals('2010-04-27', $m_2010_3_after_2->end()->format('Y-m-d'));
+		
+		$m_2010_3_after_1 = $m_2010_1->add(2);
+		$this->assertEquals('2010-03-31', $m_2010_3_after_1->begin()->format('Y-m-d'));
+		$this->assertEquals('2010-04-29', $m_2010_3_after_1->end()->format('Y-m-d'));
+	}
 }
