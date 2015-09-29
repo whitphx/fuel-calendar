@@ -289,6 +289,15 @@ class Week
 	 */
 	public function getTimestamp()
 	{
+		return $this->get_timestamp();
+	}
+
+	/**
+	 *
+	 * @return int
+	 */
+	public function get_timestamp()
+	{
 		return $this->_datetime->getTimestamp();
 	}
 
